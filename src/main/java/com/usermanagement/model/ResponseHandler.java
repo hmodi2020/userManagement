@@ -1,4 +1,4 @@
-package com.usermanagement.modle;
+package com.usermanagement.model;
 
 import java.time.LocalDateTime;
 

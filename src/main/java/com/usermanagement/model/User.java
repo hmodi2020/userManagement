@@ -1,4 +1,4 @@
-package com.usermanagement.modle;
+package com.usermanagement.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,17 +7,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.usermanagement.service.AdvanceValidation;
-import com.usermanagement.service.BasicValidation;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Data
-public class User {
+@SQLDelete(sql ="UPDATE user SET deleted = true WHERE id = ?" , check = ResultCheckStyle.COUNT)
+@Where(clause = "deleted = false")
+public class User extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -37,5 +39,11 @@ public class User {
 	@NotBlank(message = "Technology can not be blank", groups = { BasicValidation.class })
 	private String technology;
 
+	public interface BasicValidation {
 
+	}
+	
+	public interface AdvanceValidation {
+
+	}
 }

@@ -22,8 +22,12 @@ import com.usermanagement.model.ResponseHandler;
 import com.usermanagement.model.User;
 import com.usermanagement.service.UserService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/users")
+@Api("user management system")
 public class UserController {
 	@Autowired
 	private UserService userService;
@@ -35,6 +39,7 @@ public class UserController {
 	 * @param firstName
 	 * @return
 	 */
+	@ApiOperation(value = "View a list of al User and user by name",response = ResponseEntity.class)
 	@GetMapping("/")
 	public ResponseEntity<ResponseHandler> getAllUserDetails(@RequestParam(required = false) String firstName) {
 		return new ResponseEntity<ResponseHandler>(
@@ -47,6 +52,7 @@ public class UserController {
 	 * @param id
 	 * @return
 	 */
+	@ApiOperation(value = "View a list of user by id",response = ResponseEntity.class)
 	@GetMapping("/{id}")
 	public ResponseEntity<ResponseHandler> getUserDetailsById(@PathVariable Long id) {
 		return new ResponseEntity<ResponseHandler>(
@@ -59,6 +65,7 @@ public class UserController {
 	 * @param user
 	 * @return
 	 */
+	@ApiOperation(value = "create new user ",response = ResponseEntity.class)
 	@PostMapping("/")
 	public ResponseEntity<?> AddUserDetails(@Valid @RequestBody User user) {
 		Set<ConstraintViolation<User>> constraintViolations = validator.validate(user, User.BasicValidation.class);
@@ -69,7 +76,7 @@ public class UserController {
 					HttpStatus.BAD_REQUEST);
 		}
 				return new ResponseEntity<ResponseHandler>(
-						new ResponseHandler(HttpStatus.OK, LocalDateTime.now(), "success",
+						new ResponseHandler(HttpStatus.CREATED, LocalDateTime.now(), "success",
 								userService.createUser(user)),
 						HttpStatus.OK);
 	}
@@ -80,6 +87,7 @@ public class UserController {
 	 * @param user
 	 * @return
 	 */
+	@ApiOperation(value = "update user",response = ResponseEntity.class)
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateUserDetails(@PathVariable Long id, @Valid @RequestBody User user) {
 		Set<ConstraintViolation<User>> constraintViolations = validator.validate(user, User.AdvanceValidation.class);
@@ -100,6 +108,7 @@ public class UserController {
 	 * @param id
 	 * @return
 	 */
+	@ApiOperation(value = "delete user by id",response = ResponseEntity.class)
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
 		return new ResponseEntity<ResponseHandler>(

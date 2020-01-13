@@ -21,21 +21,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	          .inMemoryAuthentication()
 	          .withUser("admin")
 	          .password(encoder.encode("admin"))
-	          .roles("USER", "ADMIN");
+	          .roles("ADMIN");
+	          auth
+	          .inMemoryAuthentication()
+	          .withUser("user")
+	          .password(encoder.encode("user"))
+	          .roles("USER");
+	          
 	    }
 	 
 	    @Override
 	    protected void configure(HttpSecurity http) throws Exception {
 	        http
 	          .authorizeRequests()
-	          .antMatchers(HttpMethod.POST, "/users").hasAnyRole("USER","ADMIN")
+	          .antMatchers(HttpMethod.GET, "/users").hasAnyRole("USER","ADMIN")
 	          .antMatchers(HttpMethod.PUT, "/users").hasAnyRole("USER","ADMIN")
 	          .antMatchers(HttpMethod.PATCH, "/users").hasAnyRole("USER","ADMIN")
 	          .antMatchers(HttpMethod.DELETE, "/users").hasAnyRole("USER","ADMIN")
-	          .anyRequest().authenticated()
-	          .and()
+	          .antMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
+	          .anyRequest().fullyAuthenticated().and()
 	          .csrf().disable()
-	          .formLogin().and()
+	          .formLogin().disable()
 	          .httpBasic();  
 	    }
 }

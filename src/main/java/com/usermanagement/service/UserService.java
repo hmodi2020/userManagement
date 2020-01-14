@@ -1,5 +1,7 @@
 package com.usermanagement.service;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -9,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.usermanagement.exceptions.DataNotFoundException;
 import com.usermanagement.exceptions.DuplicateDataException;
+import com.usermanagement.model.Role;
 import com.usermanagement.model.User;
 import com.usermanagement.repository.UserRepository;
+import com.usermanagement.repository.RoleRepository;
 
 @Service
 public class UserService {
@@ -19,12 +23,18 @@ public class UserService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private RoleRepository roleRepository;
 
 	public User createUser(User user) {
-		User existsUser = userRepository.findByEmail(user.getEmail());
-		if (Objects.nonNull(existsUser)) {
-			throw new DuplicateDataException("email id already exists");
+		Optional<User> existsUser = userRepository.findByEmail(user.getEmail());
+		if(existsUser.isPresent()) {
+			throw new DuplicateDataException("email id already exists")	;
 		}
+		Role role =roleRepository.findByRole("ADMIN");
+		LOGGER.info(role.getRole() +  "--" );
+		user.setRoles(Arrays.asList(role));
 		userRepository.save(user);
 		LOGGER.info("user add successfully");
 		return user;

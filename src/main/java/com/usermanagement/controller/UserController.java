@@ -9,6 +9,7 @@ import javax.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,8 +40,10 @@ public class UserController {
 	 * @param firstName
 	 * @return
 	 */
-	@ApiOperation(value = "View a list of al User and user by name",response = ResponseEntity.class)
-	@GetMapping("/")
+	
+@ApiOperation(value = "View a list of al User and user by name",response = ResponseEntity.class)
+@PreAuthorize("hasAnyRole('USER')")
+@GetMapping("/")
 	public ResponseEntity<ResponseHandler> getAllUserDetails(@RequestParam(required = false) String firstName) {
 		return new ResponseEntity<ResponseHandler>(
 				new ResponseHandler(HttpStatus.OK, LocalDateTime.now(), "success", userService.getUsers(firstName)),
@@ -66,6 +69,7 @@ public class UserController {
 	 * @return
 	 */
 	@ApiOperation(value = "create new user ",response = ResponseEntity.class)
+	@PreAuthorize("hasAnyRole('USER')")
 	@PostMapping("/")
 	public ResponseEntity<?> AddUserDetails(@Valid @RequestBody User user) {
 		Set<ConstraintViolation<User>> constraintViolations = validator.validate(user, User.BasicValidation.class);
@@ -88,6 +92,7 @@ public class UserController {
 	 * @return
 	 */
 	@ApiOperation(value = "update user",response = ResponseEntity.class)
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateUserDetails(@PathVariable Long id, @Valid @RequestBody User user) {
 		Set<ConstraintViolation<User>> constraintViolations = validator.validate(user, User.AdvanceValidation.class);
@@ -109,6 +114,7 @@ public class UserController {
 	 * @return
 	 */
 	@ApiOperation(value = "delete user by id",response = ResponseEntity.class)
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
 		return new ResponseEntity<ResponseHandler>(

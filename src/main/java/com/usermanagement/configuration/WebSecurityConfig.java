@@ -24,19 +24,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	 @Override
 	    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-	        auth.userDetailsService(userDetailsService)
-		  .passwordEncoder(getPasswordEncoder());
-//		 PasswordEncoder encoder = 
-//		          PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//		        auth
-//		          .inMemoryAuthentication()
-//		          .withUser("user")
-//		          .password(encoder.encode("password"))
-//		          .roles("USER")
-//		          .and()
-//		          .withUser("admin")
-//		          .password(encoder.encode("admin"))
-//		          .roles("USER", "ADMIN");
+//	        auth.userDetailsService(userDetailsService)
+//		  .passwordEncoder(getPasswordEncoder());
+		 PasswordEncoder encoder = 
+		          PasswordEncoderFactories.createDelegatingPasswordEncoder();
+		        auth
+		          .inMemoryAuthentication()
+		          .withUser("user")
+		          .password(encoder.encode("user"))
+		          .roles("USER")
+		          .and()
+		          .withUser("admin")
+		          .password(encoder.encode("admin"))
+		          .roles("USER", "ADMIN");
 	    }
 	 
 	    @Override

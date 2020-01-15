@@ -32,46 +32,44 @@ import lombok.Data;
 @SQLDelete(sql ="UPDATE user SET deleted = true WHERE id = ?" , check = ResultCheckStyle.COUNT)
 @Where(clause = "deleted = false")
 public class User extends BaseEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
 	@Column(unique = true)
 	private String email;
-	@NotBlank(message = "First name can not be blank", groups = { BasicValidation.class, AdvanceValidation.class })
-	@JsonProperty("first_name")
-	private String firstName;
-	@JsonProperty("last_name")
-	@NotBlank(message = "Last name can not be blank", groups = { BasicValidation.class })
-	private String lastName;
+	@NotBlank(message = "Display name can not be blank", groups = { BasicValidation.class, AdvanceValidation.class })
+	@JsonProperty("display_name")
+	private String displayName;
 	@JsonProperty("mobile_number")
 	@NotBlank(message = "Mobile number can not be blank", groups = { BasicValidation.class, AdvanceValidation.class })
 	private String mobileNumber;
-	private String address;
-	private byte age;
-	@NotBlank(message = "Technology can not be blank", groups = { BasicValidation.class })
-	private String technology;
+	private String socialMediaId;
 	private String password;
+	private Long rank;
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role",joinColumns =@JoinColumn(name = "user_id" ,referencedColumnName="id"), inverseJoinColumns = @JoinColumn(name ="role_id" ,referencedColumnName="id"))
 	private List<Role> roles = new ArrayList() ;
-
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "user_posts",joinColumns =@JoinColumn(name="user_id",referencedColumnName = "id"),inverseJoinColumns = @JoinColumn(name ="post_id" ,referencedColumnName = "id"))
+	private List<Post> posts;
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinTable(name ="user_badges" ,joinColumns  =@JoinColumn(name="user_id",referencedColumnName = "id"),inverseJoinColumns = @JoinColumn(name="badges_id",referencedColumnName = "id"))
+	private List<Badges> badges;
 	public User () {
 		
 	}
 	
 	
 	public User(User user) {
-		this.id = user.getId();
+		super(user.getId());
 		this.email =user.getEmail();
-		this.firstName = user.getFirstName();
-		this.lastName = user.getLastName();
+		this.displayName = user.getDisplayName();
 		this.mobileNumber =user.getMobileNumber();
-		this.address = user.getAddress();
-		this.age = user.getAge();
-		this.technology = user.getTechnology();
 		this.password = user.getPassword();
+		this.socialMediaId=user.getSocialMediaId();
 		this.roles = user.getRoles();
+		this.rank=user.getRank();
+		
 	}
 
 	public interface BasicValidation {

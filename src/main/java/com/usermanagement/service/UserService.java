@@ -42,7 +42,7 @@ public class UserService {
 
 	public List<User> getUsers(String firstName) {
 		List<User> users = Objects.isNull(firstName) ? userRepository.findAll()
-				: userRepository.findAllByFirstName(firstName);
+				: userRepository.findAllByDisplayName(firstName);
 		if (users.isEmpty()) {
 			throw new DataNotFoundException("user not found");
 		}
@@ -62,7 +62,7 @@ public class UserService {
 		if (Objects.isNull(existsUser)) {
 			throw new DataNotFoundException("user not found");
 		} else {
-			existsUser.setFirstName(user.getFirstName());
+			existsUser.setDisplayName(user.getDisplayName());
 			userRepository.save(existsUser);
 		}
 		LOGGER.info("user update successfully");

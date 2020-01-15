@@ -12,7 +12,7 @@ import com.usermanagement.model.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
 
-	List<User> findAllByFirstName(String firstname);
+	List<User> findAllByDisplayName(String firstname);
 	Optional<User> findByEmail(String email);
 
 

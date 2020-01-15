@@ -1,6 +1,14 @@
 package com.usermanagement.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
@@ -13,5 +21,6 @@ import lombok.Data;
 @SQLDelete(sql ="UPDATE tag SET deleted = true WHERE id = ?" , check = ResultCheckStyle.COUNT)
 @Where(clause = "deleted = false")
 public class Tag extends BasicFieldEntitiy{
-	
+	@ManyToMany(mappedBy = "tags")
+    private List<Post> posts = new ArrayList<>();
 }

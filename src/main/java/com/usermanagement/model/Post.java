@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -17,25 +18,30 @@ import lombok.Data;
 
 @Entity
 @Data
-@SQLDelete(sql ="UPDATE post SET deleted = true WHERE id = ?" , check = ResultCheckStyle.COUNT)
+@SQLDelete(sql = "UPDATE post SET deleted = true WHERE id = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "deleted = false")
-public class Post extends BasicFieldEntitiy{
+public class Post extends BasicFieldEntitiy {
 	private Long views;
 	@OneToOne
 	private User user;
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name= "tag_id",referencedColumnName = "id")
+	@ManyToMany(cascade = {CascadeType.PERSIST,
+	        CascadeType.MERGE})
+	@JoinTable(name = "post_tag",
+    joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+    inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
 	private List<Tag> tags;
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name= "flag_id",referencedColumnName = "id")
+	@JoinColumn(name = "flag_id", referencedColumnName = "id")
 	private Flag flags;
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="vote_id")
+	@JoinColumn(name = "vote_id")
 	private Vote vote;
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinTable(name ="post_answers" ,joinColumns = @JoinColumn(name="post_id",referencedColumnName = "id"),inverseJoinColumns = @JoinColumn(name="answer_id",referencedColumnName = "id"))
+	@JoinTable(name = "post_answers",
+    joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+    inverseJoinColumns = @JoinColumn(name = "answer_id", referencedColumnName = "id"))
 	private List<Answer> answers;
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinTable(name ="post_comments" ,joinColumns = @JoinColumn(name="post_id",referencedColumnName = "id"),inverseJoinColumns = @JoinColumn(name="comment_id",referencedColumnName = "id"))
+	@JoinTable(name = "post_comments", joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"))
 	private List<Comment> comments;
 }

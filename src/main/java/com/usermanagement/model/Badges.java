@@ -11,4 +11,6 @@ import lombok.Data;
 public class Badges extends BasicFieldEntitiy{
 private Long score;
 private BadgesTypeEnum badgesType;
+
+
 }

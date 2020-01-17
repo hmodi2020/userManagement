@@ -23,6 +23,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
@@ -30,7 +31,7 @@ import lombok.Data;
 @Entity
 @Data
 @SQLDelete(sql ="UPDATE user SET deleted = true WHERE id = ?" , check = ResultCheckStyle.COUNT)
-@Where(clause = "deleted = false")
+//@Where(clause = "deleted = false")
 public class User extends BaseEntity {
 	@Column(unique = true)
 	private String email;
@@ -47,7 +48,8 @@ public class User extends BaseEntity {
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role",joinColumns =@JoinColumn(name = "user_id" ,referencedColumnName="id"), inverseJoinColumns = @JoinColumn(name ="role_id" ,referencedColumnName="id"))
 	private List<Role> roles = new ArrayList() ;
-	@JsonIgnore
+	//@JsonIgnore
+	// @JsonManagedReference
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "user_posts",joinColumns =@JoinColumn(name="user_id",referencedColumnName = "id"),inverseJoinColumns = @JoinColumn(name ="post_id" ,referencedColumnName = "id"))
 	private List<Post> posts;

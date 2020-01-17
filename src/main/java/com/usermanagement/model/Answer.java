@@ -29,6 +29,4 @@ public class Answer extends BaseEntity{
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name= "user_id",referencedColumnName = "id")
 	private User user;
-	@OneToOne
-	private Post post;
 }

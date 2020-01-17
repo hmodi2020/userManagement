@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.usermanagement.exceptions.DataNotFoundException;
 import com.usermanagement.exceptions.DuplicateDataException;
+import com.usermanagement.model.Post;
 import com.usermanagement.model.Role;
 import com.usermanagement.model.User;
 import com.usermanagement.repository.UserRepository;
@@ -72,6 +73,17 @@ public class UserService {
 	public boolean deleteUserById(Long userid) {
 		userRepository.deleteById(userid);
 		return true;
+	}
+	
+	public Post addPostByUser(Long userId,Post post) {
+		Optional<User> user =userRepository.findById(userId);
+		if (Objects.isNull(user)) {
+			throw new DataNotFoundException("user not found");
+		}
+		post.setUser(user.get());
+		user.get().getPosts().add(post);
+		userRepository.save(user.get());
+		return post;
 	}
 
 };

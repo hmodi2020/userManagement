@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.usermanagement.model.Post;
 import com.usermanagement.model.ResponseHandler;
 import com.usermanagement.model.User;
 import com.usermanagement.service.UserService;
@@ -27,7 +29,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 @Api("user management system")
 public class UserController {
 	@Autowired
@@ -119,6 +121,17 @@ public class UserController {
 	public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
 		return new ResponseEntity<ResponseHandler>(
 				new ResponseHandler(HttpStatus.OK, LocalDateTime.now(), "success", userService.deleteUserById(id)),
+				HttpStatus.OK);
+
+	}
+	
+	
+	@ApiOperation(value = "add/create post by user")
+	@PreAuthorize("hasAnyRole('USER')")
+	@PostMapping("/{id}/post")
+	public ResponseEntity<?> createPostByUser(@PathVariable Long id,@RequestBody Post post){
+		return new ResponseEntity<ResponseHandler>(
+				new ResponseHandler(HttpStatus.OK, LocalDateTime.now(), "success", userService.addPostByUser(id, post)),
 				HttpStatus.OK);
 
 	}

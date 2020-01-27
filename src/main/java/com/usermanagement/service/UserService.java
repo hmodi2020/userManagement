@@ -21,20 +21,20 @@ import com.usermanagement.repository.RoleRepository;
 public class UserService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private RoleRepository roleRepository;
 
 	public User createUser(User user) {
 		Optional<User> existsUser = userRepository.findByEmail(user.getEmail());
-		if(existsUser.isPresent()) {
-			throw new DuplicateDataException("email id already exists")	;
+		if (existsUser.isPresent()) {
+			throw new DuplicateDataException("email id already exists");
 		}
-		Role role =roleRepository.findByRole("ADMIN");
-		LOGGER.info(role.getRole() +  "--" );
+		Role role = roleRepository.findByRole("ADMIN");
+		LOGGER.info(role.getRole() + "--");
 		user.setRoles(Arrays.asList(role));
 		userRepository.save(user);
 		LOGGER.info("user add successfully");
@@ -74,9 +74,9 @@ public class UserService {
 		userRepository.deleteById(userid);
 		return true;
 	}
-	
-	public Post addPostByUser(Long userId,Post post) {
-		Optional<User> user =userRepository.findById(userId);
+
+	public Post addPostByUser(Long userId, Post post) {
+		Optional<User> user = userRepository.findById(userId);
 		if (Objects.isNull(user)) {
 			throw new DataNotFoundException("user not found");
 		}
